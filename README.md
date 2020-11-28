@@ -1,1 +1,1 @@
-# cv2_to_s3
+# MNIST DAQ
