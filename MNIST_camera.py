@@ -122,30 +122,25 @@ def detectAndDisplay():
       
       result = model.predict(np.array([num]))
       result_number = np.argmax(result)
-      # if result_number in range(10):
+      if result_number in range(10):
+          #cv2.rectangle(frame, (x-margin, y-margin), (x+w+margin, y+h+margin), (0, 255, 0), 2)
+          cont_margin = cv2.rectangle(frame, (x-margin, y-margin), (x+w+margin, y+h+margin), (0, 255, 0), 2)
+          cv2.imwrite('test.jpg',cont_margin)
 
-      cv2.rectangle(frame, (x-margin, y-margin), (x+w+margin, y+h+margin), (0, 255, 0), 2)
+          config = load_config()
+          client = initiate_session(config, 's3')
 
-      cont_margin = cv2.rectangle(frame, (x-margin, y-margin), (x+w+margin, y+h+margin), (0, 255, 0), 2)
-      
+          fileobj = 'test.jpg'
+          bucket = config['upload_bucket']
+          key = 'testimg2.jpg'
 
-      cv2.imwrite('test.jpg',cont_margin)
+          upload_file(client, fileobj, bucket, key)
 
+          # text = "Number is : {} ".format(result_number)
+          # cv2.putText(frame, text, (margin, frame_height-margin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-
-      """" 
-      1. 숫자로 보이는게 있다면
-      
-      2. 화면을 멈추고 스샷을 뜬다
-      
-      3. 그걸 S3에 보낸다.
-      
-      """
-      #얘를 S3로 보내기
-
-      text = "Number is : {} ".format(result_number)
-      print(text)
-      cv2.putText(frame, text, (margin, frame_height-margin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+      else :
+          continue
 
     cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     img = Image.fromarray(cv2image)
